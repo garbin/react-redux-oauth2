@@ -68,6 +68,7 @@ export const actions = {
       dispatch(actions.save_token(token));
       // sync user
       dispatch(actions.sync_user(token.access_token));
+      dispatch({ type: 'OAUTH_COMPLETE' });
     }
   },
   save_token(token){
@@ -175,8 +176,8 @@ export function OAuthSignin(Button) {
       }
       handleClick(e, provider){
         let url = `${config.url}${config.providers[provider]}`;
-        let name = 'connecting to github';
-        let settings = 'scrollbars=no,toolbar=no,location=no,titlebar=no,directories=no,status=no,menubar=no,width=600,height=500';
+        let name = 'connecting to ' + provider;
+        let settings = 'scrollbars=no,toolbar=no,location=no,titlebar=no,directories=no,status=no,menubar=no,top=100,left=100,width=600,height=500';
         this.props.actions.start();
         let popup = window.open(url, name, settings);
         this.listenPopup(popup);
