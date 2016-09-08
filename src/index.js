@@ -130,7 +130,7 @@ export const reducer = {
   }
 }
 
-export function OAuth2Component(Component) {
+export function OAuthComponent(Component) {
   return connect(state => ({oauth:state.oauth}), dispatch => ({oauth_actions:bindActionCreators(actions, dispatch)}))(
     class extends React.Component {
       componentWillMount(){
