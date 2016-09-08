@@ -62,12 +62,12 @@ export const actions = {
       payload: user,
     }
   },
-  complete(token){
+  complete(token, cb){
     return dispatch => {
       // save token
       dispatch(actions.save_token(token));
       // sync user
-      dispatch(actions.sync_user(token.access_token));
+      dispatch(actions.sync_user(token.access_token, cb));
       dispatch({ type: 'OAUTH_COMPLETE' });
     }
   },
@@ -97,10 +97,11 @@ export const actions = {
       }
     }
   },
-  sync_user(token){
+  sync_user(token, cb){
     return dispatch => {
       fetch_user(token).then(res => {
         dispatch(actions.load_user(res.data))
+        cb(res.data);
       }).catch(actions.error)
     }
   }
@@ -172,7 +173,10 @@ export function OAuthSignin(Button) {
   return connect(state => ({oauth:state.oauth}), dispatch => ({actions:bindActionCreators(actions, dispatch)}))(
     class extends React.Component {
       static defaultProps = {
-        onClick: function(){}
+        onClick: function(){},
+        onCancel: function(){},
+        onSuccess: function(){},
+        onFailed: function(){}
       }
       handleClick(e, provider){
         let url = `${config.url}${config.providers[provider]}`;
@@ -184,8 +188,8 @@ export function OAuthSignin(Button) {
       }
       listenPopup(popup){
         if (popup.closed) {
-          console.log('closed');
           this.props.actions.cancel();
+          this.props.onCancel();
           // dispatch auth canceled
         } else {
           let token;
@@ -194,7 +198,7 @@ export function OAuthSignin(Button) {
           } catch (e) { }
           if (token && token.access_token) {
             // 同步用户信息
-            this.props.actions.complete(token);
+            this.props.actions.complete(token, this.props.onSuccess);
             popup.close();
           } else {
             setTimeout(this.listenPopup.bind(this, popup), 0);
@@ -202,7 +206,7 @@ export function OAuthSignin(Button) {
         }
       }
       render(){
-        let {oauth, dispatch, actions, provider, ...rest} = this.props;
+        let {oauth, dispatch, actions, provider, onCancel, onSuccess, onFailed, ...rest} = this.props;
         let props = Object.assign({}, rest);
         props.disabled = oauth.authenticating || oauth.user !== null;
         props.onClick = _.wrap(props.onClick, (func, e)=>{
