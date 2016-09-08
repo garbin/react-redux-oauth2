@@ -59,7 +59,7 @@
     "gulp-watch": "^4.3.9",
     "nyc": "^8.1.0"
   },
-  "homepage": "https://github.com/garbin/es6-module-boilerplate#readme",
+  "homepage": "https://github.com/garbin/redux-oauth2#readme",
   "keywords": [
     "redux",
     "oauth2"
