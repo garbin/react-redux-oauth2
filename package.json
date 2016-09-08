@@ -1,0 +1,66 @@
+{
+  "name": "redux-oauth2",
+  "version": "0.1.0",
+  "description": "es6-module-boilerplate",
+  "main": "lib/index.js",
+  "scripts": {
+    "compile": "babel --presets es2015,stage-0 -d lib/ src/",
+    "prepublish": "npm run compile",
+    "watch": "gulp watch",
+    "test": "ava"
+  },
+  "babel": {
+    "presets": [
+      "es2015",
+      "stage-0"
+    ]
+  },
+  "ava": {
+    "files": [
+      "test/**/*.test.{js,es}",
+      "!test/__lib__/**/*"
+    ],
+    "source": [
+      "**/*.{js,jsx,es}",
+      "!build/**/*"
+    ],
+    "require": [
+      "babel-register",
+      "babel-polyfill"
+    ],
+    "babel": "inherit"
+  },
+  "nyc": {
+    "extension": [
+      ".jsx",
+      ".es"
+    ]
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/garbin/redux-oauth2.git"
+  },
+  "author": "Garbin Huang <garbinh@gmail.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/garbin/redux-oauth2/issues"
+  },
+  "devDependencies": {
+    "ava": "^0.16.0",
+    "babel": "^6.5.2",
+    "babel-cli": "^6.14.0",
+    "babel-loader": "^6.2.5",
+    "babel-preset-es2015": "^6.14.0",
+    "babel-preset-react": "^6.5.0",
+    "babel-preset-stage-0": "^6.5.0",
+    "gulp": "^3.9.1",
+    "gulp-babel": "^6.1.2",
+    "gulp-watch": "^4.3.9",
+    "nyc": "^8.1.0"
+  },
+  "homepage": "https://github.com/garbin/es6-module-boilerplate#readme",
+  "keywords": [
+    "redux",
+    "oauth2"
+  ]
+}
