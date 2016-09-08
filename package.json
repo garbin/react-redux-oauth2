@@ -1,7 +1,7 @@
 {
-  "name": "redux-oauth2",
+  "name": "react-redux-oauth2",
   "version": "0.1.0",
-  "description": "es6-module-boilerplate",
+  "description": "React Redux OAuth2",
   "main": "lib/index.js",
   "scripts": {
     "compile": "babel --presets es2015,stage-0 -d lib/ src/",

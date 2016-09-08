@@ -1,6 +1,6 @@
 # Logs
 logs
-lib
+lib/
 *.log
 npm-debug.log*
 
