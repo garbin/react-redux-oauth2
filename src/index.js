@@ -72,7 +72,7 @@ export const actions = {
     }
   },
   save_token(token){
-    react_cookie.save('redux_oauth2', JSON.stringify(token));
+    react_cookie.save('redux_oauth2', JSON.stringify(token), {path:'/'});
     return {
       type: 'OAUTH_SAVE_TOKEN',
       payload: token
