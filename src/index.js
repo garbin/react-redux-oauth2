@@ -10,6 +10,8 @@ import _ from 'lodash'
 const config = {
   url: 'http://localhost',
   token: '/oauth/token',
+  client_id:null,
+  client_secret: null,
   providers: {
     github: '/auth/github'
   }
@@ -60,6 +62,19 @@ export const actions = {
     return {
       type: 'OAUTH_LOAD_USER',
       payload: user,
+    }
+  },
+  get_token(creds, cb){
+    return dispatch => {
+      dispatch(actions.start());
+      axios.post(`${config.url}${config.token}`, Object.assign({
+        client_id: config.client_id,
+        client_secret: config.client_secret,
+        grant_type:"password",
+        scope: "all",
+      }, creds)).then(res => {
+        dispatch(actions.complete(res.data, cb))l
+      }).catch(e => dispatch(actions.error(e)));
     }
   },
   complete(token, cb){
