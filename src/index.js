@@ -73,8 +73,13 @@ export const actions = {
         grant_type:"password",
         scope: "all",
       }, creds)).then(res => {
-        dispatch(actions.complete(res.data, cb))
-      }).catch(e => dispatch(actions.error(e)));
+        dispatch(actions.complete(res.data, ()=>{
+          cb(null, res.data);
+        }));
+      }).catch(e => {
+        cb(e);
+        dispatch(actions.error(e))
+      });
     }
   },
   complete(token, cb){
