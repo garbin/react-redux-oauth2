@@ -29,7 +29,7 @@ function fetch_user(token) {
   });
 }
 
-export function authOnServer(cookies, store, options) {
+export function storeInitialize(cookies, store, options) {
   return new Promise((resolve, reject)=>{
     try {
       cookies = node_cookie.parse(cookies);
