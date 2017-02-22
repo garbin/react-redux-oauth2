@@ -171,7 +171,7 @@ export function OAuthSignout(Button) {
       }
     })
 }
-export function OAuthSignin(Button, config) {
+export function OAuthSignin(Button, popupSetting) {
   return connect(state => ({oauth:state.oauth}), dispatch => ({actions:bindActionCreators(actions, dispatch)}))(
     class extends React.Component {
       static defaultProps = {
@@ -195,7 +195,7 @@ export function OAuthSignin(Button, config) {
           left: 100,
           width: 600,
           height: 500
-        }, config || {})
+        }, popupSetting || {})
         this.props.actions.start();
         let popup = window.open(url, name, querystring.stringify(settings).replace('&', ','));
         this.listenPopup(popup);
