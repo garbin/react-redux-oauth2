@@ -197,8 +197,7 @@ export function OAuthSignin(Button, popupSetting) {
           height: '500'
         }, popupSetting || {})
         this.props.actions.start();
-        console.log(querystring.stringify(settings).replace('&', ','))
-        let popup = window.open(url, name, querystring.stringify(settings).replace('&', ','));
+        let popup = window.open(url, name, querystring.stringify(settings).replace(/&/g, ','));
         this.listenPopup(popup);
       }
       listenPopup(popup){
