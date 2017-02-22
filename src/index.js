@@ -21,7 +21,7 @@ export default function (_config) {
   Object.assign(config, _config);
 }
 
-function fetch_user(token) {
+function fetchUser(token) {
   return axios.get(`${config.url}${config.token}`, {
     headers:{
       'Authorization':`Bearer ${token}`
@@ -34,7 +34,7 @@ export function storeInitialize(cookies, store, options) {
     try {
       cookies = node_cookie.parse(cookies);
       let redux_oauth2 = JSON.parse(decodeURIComponent(cookies.redux_oauth2));
-      fetch_user(redux_oauth2.access_token).then(res => resolve(store.dispatch(actions.load_user(res.data)))).catch(reject);
+      fetchUser(redux_oauth2.access_token).then(res => resolve(store.dispatch(actions.loadUser(res.data)))).catch(reject);
     } catch (e) {
       reject(e);
     }
@@ -58,13 +58,13 @@ export const actions = {
       type: 'OAUTH_START',
     }
   },
-  load_user(user){
+  loadUser(user){
     return {
       type: 'OAUTH_LOAD_USER',
       payload: user,
     }
   },
-  get_token(creds, cb){
+  getToken(creds, cb){
     return dispatch => {
       dispatch(actions.start());
       axios.post(`${config.url}${config.token}`, Object.assign({
@@ -85,13 +85,13 @@ export const actions = {
   complete(token, cb){
     return dispatch => {
       // save token
-      dispatch(actions.save_token(token));
+      dispatch(actions.saveToken(token));
       // sync user
-      dispatch(actions.sync_user(token.access_token, cb));
+      dispatch(actions.syncUser(token.access_token, cb));
       dispatch({ type: 'OAUTH_COMPLETE' });
     }
   },
-  save_token(token){
+  saveToken(token){
     react_cookie.save('redux_oauth2', JSON.stringify(token), {path:'/'});
     return {
       type: 'OAUTH_SAVE_TOKEN',
@@ -117,10 +117,10 @@ export const actions = {
       }
     }
   },
-  sync_user(token, cb){
+  syncUser(token, cb){
     return dispatch => {
-      fetch_user(token).then(res => {
-        dispatch(actions.load_user(res.data))
+      fetchUser(token).then(res => {
+        dispatch(actions.loadUser(res.data))
         cb(res.data);
       }).catch(actions.error)
     }
@@ -150,24 +150,6 @@ export const reducer = {
   }
 }
 
-export function OAuthComponent(Component) {
-  return connect(state => ({oauth:state.oauth}), dispatch => ({oauth_actions:bindActionCreators(actions, dispatch)}))(
-    class extends React.Component {
-      componentWillMount(){
-        let auth_info = react_cookie.load('redux_oauth2');
-        if (this.props.oauth.user === null && auth_info && auth_info.access_token) {
-          this.props.oauth_actions.sync_user(auth_info.access_token);
-        }
-      }
-      render(){
-        let {oauth, oauth_actions, ...rest} = this.props;
-        let props = Object.assign({}, rest);
-        return <Component {...props} />
-      }
-    }
-  )
-}
-
 export function OAuthSignout(Button) {
   return connect(state => ({oauth:state.oauth}), dispatch => ({actions:bindActionCreators(actions, dispatch)}))(
     class extends React.Component {
@@ -189,7 +171,7 @@ export function OAuthSignout(Button) {
       }
     })
 }
-export function OAuthSignin(Button) {
+export function OAuthSignin(Button, config) {
   return connect(state => ({oauth:state.oauth}), dispatch => ({actions:bindActionCreators(actions, dispatch)}))(
     class extends React.Component {
       static defaultProps = {
@@ -201,9 +183,21 @@ export function OAuthSignin(Button) {
       handleClick(e, provider){
         let url = `${config.url}${config.providers[provider]}`;
         let name = 'connecting to ' + provider;
-        let settings = 'scrollbars=no,toolbar=no,location=no,titlebar=no,directories=no,status=no,menubar=no,top=100,left=100,width=600,height=500';
+        let settings = Object.assign({
+          scrollbars: 'no',
+          toolbar: 'no',
+          location: 'no',
+          titlebar: 'no',
+          directories: 'no',
+          status: 'no',
+          menubar: 'no',
+          top: 100,
+          left: 100,
+          width: 600,
+          height: 500
+        }, config || {})
         this.props.actions.start();
-        let popup = window.open(url, name, settings);
+        let popup = window.open(url, name, querystring.stringify(settings).replace('&', ','));
         this.listenPopup(popup);
       }
       listenPopup(popup){

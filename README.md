@@ -3,7 +3,7 @@ Redux OAuth Component, server rendering supported
 
 ## Reducer
 ```js
-import {reducer} from 'redux-oauth2'
+import {reducer} from 'react-redux-oauth2'
 combineReducers(
   // ... your reducers
   ...reducer
@@ -11,12 +11,15 @@ combineReducers(
 ```
 ## Signin Button
 ```js
-import {OAuthSignin} from 'redux-oauth2'
+import {OAuthSignin} from 'react-redux-oauth2'
 
 let Signin = OAuthSignin(class extends React.Component {
   render(){
     return <button {...this.props} />
   }
+}, {
+  width: ...
+  height: ...
 });
 //
 <Signin provider='github' onSuccess={...} onFailed={...} onCancel={...} />
@@ -24,7 +27,7 @@ let Signin = OAuthSignin(class extends React.Component {
 
 ## Signout Button
 ```js
-import {OAuthSignout} from 'redux-oauth2'
+import {OAuthSignout} from 'react-redux-oauth2'
 let Signout = OAuthSignout(class extends React.Component {
   render(){
     return <button {...this.props} />
@@ -32,16 +35,4 @@ let Signout = OAuthSignout(class extends React.Component {
 });
 //
 <Signout />
-```
-
-## HoC to initialize auth state
-```js
-import {OAuthComponent} from 'redux-oauth2'
-class App extends React.Component {
-  render(){
-    ...
-  }
-}
-
-export default OAuthComponent(App);
 ```
