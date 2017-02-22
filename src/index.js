@@ -191,12 +191,13 @@ export function OAuthSignin(Button, popupSetting) {
           directories: 'no',
           status: 'no',
           menubar: 'no',
-          top: 100,
-          left: 100,
-          width: 600,
-          height: 500
+          top: '100',
+          left: '100',
+          width: '600',
+          height: '500'
         }, popupSetting || {})
         this.props.actions.start();
+        console.log(querystring.stringify(settings).replace('&', ','))
         let popup = window.open(url, name, querystring.stringify(settings).replace('&', ','));
         this.listenPopup(popup);
       }
