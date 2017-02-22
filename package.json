@@ -1,6 +1,6 @@
 {
   "name": "react-redux-oauth2",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "React Redux OAuth2",
   "main": "lib/index.js",
   "scripts": {
