@@ -33,7 +33,7 @@ export function storeInitialize(cookies, { dispatch }, options) {
   return new Promise((resolve, reject)=>{
     try {
       cookies = node_cookie.parse(cookies);
-      let redux_oauth2 = JSON.parse(decodeURIComponent(cookies.redux_oauth2 || ''));
+      let redux_oauth2 = JSON.parse(decodeURIComponent(cookies.redux_oauth2 || '{}'));
       fetchUser(redux_oauth2.access_token).then(res => resolve(dispatch(actions.loadUser(res.data)))).catch(reject);
     } catch (e) {
       console.error(e)
