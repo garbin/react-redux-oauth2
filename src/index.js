@@ -29,12 +29,12 @@ function fetchUser(token) {
   });
 }
 
-export function storeInitialize(cookies, store, options) {
+export function storeInitialize(cookies, { dispatch }, options) {
   return new Promise((resolve, reject)=>{
     try {
       cookies = node_cookie.parse(cookies);
       let redux_oauth2 = JSON.parse(decodeURIComponent(cookies.redux_oauth2));
-      fetchUser(redux_oauth2.access_token).then(res => resolve(store.dispatch(actions.loadUser(res.data)))).catch(reject);
+      fetchUser(redux_oauth2.access_token).then(res => resolve(dispatch(actions.loadUser(res.data)))).catch(reject);
     } catch (e) {
       reject(e);
     }
