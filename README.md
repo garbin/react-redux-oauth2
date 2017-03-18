@@ -1,6 +1,19 @@
 # redux-oauth
 Redux OAuth Component, server rendering supported
 
+## Config
+```js
+import configureOauth2 from 'react-redux-oauth'
+
+configureOauth2({
+  client_id: 'YOUR client id',
+  client_secret: 'YOUR client secret',
+  url: 'http://localhost:5000/api', // your oauth server root
+  providers: {
+    github: '/auth/github' // provider path
+  }
+})
+```
 ## Reducer
 ```js
 import {reducer} from 'react-redux-oauth2'
