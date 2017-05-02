@@ -19,7 +19,7 @@ configureOauth2({
 import {reducer} from 'react-redux-oauth2'
 combineReducers(
   // ... your reducers
-  ...reducer
+  oauth: reducer
 );
 ```
 ## Signin Button
