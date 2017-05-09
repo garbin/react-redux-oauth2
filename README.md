@@ -67,3 +67,8 @@ class YourComponent extends React.Component {
 }
 ```
 For a full runable example see `./demo/src`
+## Run Demo & debug locally
+```bash
+npm start
+```
+http://localhost:3000 for debug
