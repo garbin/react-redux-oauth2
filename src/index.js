@@ -46,8 +46,8 @@ export const actions = {
       }).then(res => {
         const user = { token, profile: res.data }
         dispatch(actions.save(user))
-        cb(user)
-      })
+        cb(null, user)
+      }).catch(cb)
     }
   }
 }
@@ -139,6 +139,11 @@ export function signin (settings) {
   }, settings)
   return Component => {
     return connect(state => ({oauth: state.oauth}))(class extends React.Component {
+      static get defaultProps () {
+        return {
+          onClick () {}
+        }
+      }
       handleClick (e, provider) {
         const { dispatch, oauth: { config } } = this.props
         const url = `${config.url}${config.providers[provider]}`
@@ -148,7 +153,7 @@ export function signin (settings) {
           window.open(url, name, querystring.stringify(settings.popup).replace(/&/g, ','))
         )
       }
-      async listenPopup (popup) {
+      listenPopup (popup) {
         const { dispatch } = this.props
         if (popup.closed) {
           dispatch(actions.cancel())
@@ -159,7 +164,15 @@ export function signin (settings) {
             token = querystring.parse(popup.location.search.substr(1))
           } catch (e) { }
           if (token && token.access_token) {
-            await dispatch(actions.sync(token, settings.success))
+            dispatch(actions.sync(token, (err, user) => {
+              if (err) {
+                dispatch(actions.error(err))
+                settings.failed(err)
+                popup.close()
+              } else {
+                settings.success(user)
+              }
+            }))
             popup.close()
           } else {
             setTimeout(this.listenPopup.bind(this, popup), 0)
