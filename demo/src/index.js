@@ -39,7 +39,14 @@ const Demo = connect(state => ({oauth: state.oauth}))(class extends React.Compon
         console.log(user)
       }
     })(props => <button {...props} />)
-    const Signout = signout()(props => <button {...props} />)
+    const Signout = signout({
+      success () {
+        console.log(arguments)
+      },
+      failed () {
+        console.log('error')
+      }
+    })(props => <button {...props} />)
     return (
       <div>
         <h1>react-redux-oauth2 Demo</h1>

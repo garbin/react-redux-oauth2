@@ -28,14 +28,18 @@ export const actions = {
       })
     }
   },
-  signout () {
+  signout (cb = f => f) {
     return (dispatch, getState) => {
       const { user, config } = getState().oauth
       axios.delete(`${config.url}${config.token}`, {
         headers: { 'Authorization': `Bearer ${user.token.access_token}` }
       }).then(res => {
         dispatch(actions.reset())
-      }).catch(e => dispatch(actions.error(e)))
+        cb(null, res)
+      }).catch(e => {
+        dispatch(actions.error(e))
+        cb(e)
+      })
     }
   },
   sync (token, cb = f => f) {
@@ -94,6 +98,10 @@ export const reducer = handleActions({
 })
 
 export function signout (settings) {
+  settings = Object.assign({
+    success () {},
+    failed () {}
+  }, settings)
   return Component => {
     return connect(state => ({oauth: state.oauth}))(class extends React.Component {
       static get defaultProps () {
@@ -102,7 +110,9 @@ export function signout (settings) {
         }
       }
       handleClick () {
-        this.props.dispatch(actions.signout())
+        this.props.dispatch(actions.signout((e, res) => {
+          return e ? settings.failed(e) : settings.success(null, res)
+        }))
       }
       render () {
         const { oauth, ...rest } = this.props
