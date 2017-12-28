@@ -19,7 +19,7 @@ combineReducers(
 
 ## Usage
 ```js
-import { actions, reducer, signin, signout } from 'react-redux-oauth'
+import { actions, reducer, signin, signout } from 'react-redux-oauth2'
 
 class YourComponent extends React.Component {
   componentWillMount () {
