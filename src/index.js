@@ -16,7 +16,7 @@ export const actions = {
     return (dispatch, getState) => {
       const { config } = getState().oauth
       dispatch(actions.start())
-      axios.post(`${config.url}${config.token}`, Object.assign({
+      return axios.post(`${config.url}${config.token}`, Object.assign({
         client_id: config.client_id,
         client_secret: config.client_secret,
         grant_type: 'password',
@@ -31,7 +31,7 @@ export const actions = {
   signout (cb = f => f) {
     return (dispatch, getState) => {
       const { user, config } = getState().oauth
-      axios.delete(`${config.url}${config.token}`, {
+      return axios.delete(`${config.url}${config.token}`, {
         headers: { 'Authorization': `Bearer ${user.token.access_token}` }
       }).then(res => {
         dispatch(actions.reset())
