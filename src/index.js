@@ -199,7 +199,7 @@ export function signin (settings) {
           this.handleClick(e, provider)
           return func(e)
         })
-        return <Component {...props} />
+        return <Component {...props} provider={provider} />
       }
     })
   }
