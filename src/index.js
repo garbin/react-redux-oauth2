@@ -155,8 +155,9 @@ export function signin (settings) {
         }
       }
       handleClick (e, provider) {
-        const { dispatch, oauth: { config } } = this.props
-        const url = `${config.url}${config.providers[provider]}`
+        const { dispatch, oauth: { config }, state } = this.props
+        const query = state ? `?state=${state}` : ''
+        const url = `${config.url}${config.providers[provider]}${query}`
         const name = 'connecting to ' + provider
         dispatch(actions.start())
         this.listenPopup(
