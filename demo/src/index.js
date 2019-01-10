@@ -27,10 +27,10 @@ const Demo = connect(state => ({oauth: state.oauth}))(class extends React.Compon
   async handleSignin (e) {
     const { dispatch } = this.props
     e.preventDefault()
-    await dispatch(actions.signin({
+    console.log(await dispatch(actions.signin({
       username: this.refs.username.value,
       password: this.refs.password.value
-    }, console.log))
+    }, console.log)), '=====')
   }
   render () {
     const { oauth } = this.props

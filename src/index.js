@@ -16,15 +16,19 @@ export const actions = {
     return (dispatch, getState) => {
       const { config } = getState().oauth
       dispatch(actions.start())
-      return axios.post(`${config.url}${config.token}`, Object.assign({
-        client_id: config.client_id,
-        client_secret: config.client_secret,
-        grant_type: 'password',
-        scope: 'all'
-      }, creds)).then(res => {
-        return dispatch(actions.sync(res.data, cb))
-      }).catch(e => {
-        dispatch(actions.error(e))
+      return new Promise((resolve, reject) => {
+        axios.post(`${config.url}${config.token}`, Object.assign({
+          client_id: config.client_id,
+          client_secret: config.client_secret,
+          grant_type: 'password',
+          scope: 'all'
+        }, creds)).then(res => {
+          dispatch(actions.sync(res.data, cb))
+          resolve(res)
+        }).catch(e => {
+          dispatch(actions.error(e))
+          reject(e)
+        })
       })
     }
   },
