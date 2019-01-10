@@ -147,6 +147,7 @@ export function signin (settings) {
       width: '600',
       height: '500'
     },
+    listen: null,
     success () {},
     cancel () {},
     failed () {}
@@ -159,8 +160,9 @@ export function signin (settings) {
         }
       }
       handleClick (e, provider) {
-        const { dispatch, oauth: { config } } = this.props
-        const url = `${config.url}${config.providers[provider]}`
+        const { dispatch, oauth: { config }, state } = this.props
+        const query = state ? `?state=${state}` : ''
+        const url = `${config.url}${config.providers[provider]}${query}`
         const name = 'connecting to ' + provider
         dispatch(actions.start())
         this.listenPopup(
@@ -173,24 +175,27 @@ export function signin (settings) {
           dispatch(actions.cancel())
           settings.cancel()
         } else {
-          let token
-          try {
-            token = querystring.parse(popup.location.search.substr(1))
-          } catch (e) { }
-          if (token && token.access_token) {
-            dispatch(actions.sync(token, (err, user) => {
-              if (err) {
-                dispatch(actions.error(err))
-                settings.failed(err)
-                popup.close()
-              } else {
-                settings.success(user)
-              }
-            }))
-            popup.close()
-          } else {
-            setTimeout(this.listenPopup.bind(this, popup), 0)
+          const listen = () => {
+            let token
+            try {
+              token = querystring.parse(popup.location.search.substr(1))
+            } catch (e) { }
+            if (token && token.access_token) {
+              dispatch(actions.sync(token, (err, user) => {
+                if (err) {
+                  dispatch(actions.error(err))
+                  settings.failed(err)
+                  popup.close()
+                } else {
+                  settings.success(user)
+                }
+              }))
+              popup.close()
+            } else {
+              setTimeout(this.listenPopup.bind(this, popup), 0)
+            }
           }
+          settings.listen ? settings.listen.call(this, popup, settings) : listen()
         }
       }
       render () {
@@ -203,7 +208,7 @@ export function signin (settings) {
           this.handleClick(e, provider)
           return func(e)
         })
-        return <Component {...props} />
+        return <Component {...props} provider={provider} />
       }
     })
   }
