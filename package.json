@@ -1,6 +1,6 @@
 {
   "name": "react-redux-oauth2",
-  "version": "0.5.7",
+  "version": "0.5.8",
   "description": "react-redux-oauth2 React component",
   "main": "lib/index.js",
   "module": "es/index.js",
